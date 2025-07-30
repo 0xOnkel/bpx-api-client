@@ -11,6 +11,17 @@ pub enum TriggerBy {
     IndexPrice,
 }
 
+impl ToString for TriggerBy {
+    fn to_string(&self) -> String {
+        match self {
+            TriggerBy::LastPrice => "LastPrice",
+            TriggerBy::MarkPrice => "MarkPrice",
+            TriggerBy::IndexPrice => "IndexPrice",
+        }
+        .to_string()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TriggerQuantity {
     Percent(Decimal),
