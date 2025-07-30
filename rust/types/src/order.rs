@@ -291,6 +291,21 @@ pub enum OrderUpdateType {
     TriggerFailed,
 }
 
+impl ToString for OrderUpdateType {
+    fn to_string(&self) -> String {
+        match self {
+            OrderUpdateType::OrderAccepted => "OrderAccepted",
+            OrderUpdateType::OrderCancelled => "OrderCancelled",
+            OrderUpdateType::OrderExpired => "OrderExpired",
+            OrderUpdateType::OrderFill => "OrderFill",
+            OrderUpdateType::OrderModified => "OrderModified",
+            OrderUpdateType::TriggerPlaced => "TriggerPlaced",
+            OrderUpdateType::TriggerFailed => "TriggerFailed",
+        }
+        .to_string()
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct OrderUpdate {
