@@ -18,3 +18,14 @@ pub struct ConvertDustHistory {
     pub usdc_received: Decimal,
     pub timestamp: u64,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct FundingPayment {
+    pub user_id: u64,
+    pub subaccount_id: Option<u64>,
+    pub symbol: String,
+    pub quantity: Decimal,
+    pub interval_end_timestamp: String,
+    pub funding_rate: Decimal,
+}
