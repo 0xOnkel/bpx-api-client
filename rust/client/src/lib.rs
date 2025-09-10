@@ -66,6 +66,8 @@ pub use bpx_api_types as types;
 /// Re-export of the custom `Error` type and `Result` alias for error handling.
 pub use error::{Error, Result};
 
+use crate::routes::history::API_FUNDING_PAYMENTS_HISTORY;
+
 const API_USER_AGENT: &str = "bpx-rust-client";
 const API_KEY_HEADER: &str = "X-API-Key";
 
@@ -266,6 +268,7 @@ impl BpxClient {
             API_ACCOUNT_MAX_WITHDRAWAL if method == Method::GET => "maxWithdrawalQuantity",
             API_ACCOUNT if method == Method::PATCH => "accountUpdate",
             API_ACCOUNT_CONVERT_DUST if method == Method::POST => "convertDust",
+            API_FUNDING_PAYMENTS_HISTORY if method == Method::GET => "fundingHistoryQueryAll",
             _ => {
                 let req = self.client().request(method, url);
                 if let Some(payload) = payload {
