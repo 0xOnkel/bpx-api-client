@@ -37,7 +37,10 @@ use base64::{engine::general_purpose::STANDARD, Engine};
 use ed25519_dalek::{Signature, Signer, SigningKey, VerifyingKey};
 use reqwest::{header::CONTENT_TYPE, IntoUrl, Method, Request, Response, StatusCode};
 use routes::{
-    account::{API_ACCOUNT, API_ACCOUNT_CONVERT_DUST, API_ACCOUNT_MAX_BORROW, API_ACCOUNT_MAX_WITHDRAWAL},
+    account::{
+        API_ACCOUNT, API_ACCOUNT_CONVERT_DUST, API_ACCOUNT_CONVERT_DUST_HISTORY, API_ACCOUNT_MAX_BORROW,
+        API_ACCOUNT_MAX_WITHDRAWAL,
+    },
     borrow_lend::API_BORROW_LEND_POSITIONS,
     capital::{API_CAPITAL, API_COLLATERAL, API_DEPOSITS, API_DEPOSIT_ADDRESS, API_WITHDRAWALS},
     futures::API_FUTURES_POSITION,
@@ -50,7 +53,7 @@ use serde_json::{Map, Value};
 use std::{
     borrow::Cow,
     collections::BTreeMap,
-    time::{SystemTime, UNIX_EPOCH},
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
 pub mod error;
@@ -155,6 +158,7 @@ impl BpxClient {
         let client = reqwest::Client::builder()
             .user_agent(API_USER_AGENT)
             .default_headers(headers)
+            .timeout(Duration::from_secs(5))
             .build()?;
 
         Ok(BpxClient {
@@ -267,6 +271,7 @@ impl BpxClient {
             API_ACCOUNT_MAX_WITHDRAWAL if method == Method::GET => "maxWithdrawalQuantity",
             API_ACCOUNT if method == Method::PATCH => "accountUpdate",
             API_ACCOUNT_CONVERT_DUST if method == Method::POST => "convertDust",
+            API_ACCOUNT_CONVERT_DUST_HISTORY if method == Method::GET => "dustHistoryQueryAll",
             _ => {
                 let req = self.client().request(method, url);
                 if let Some(payload) = payload {

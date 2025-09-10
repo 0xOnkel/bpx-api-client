@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 
@@ -19,6 +21,15 @@ pub struct Asset {
 pub enum MarketType {
     Spot,
     Perp,
+}
+
+impl Display for MarketType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MarketType::Spot => f.write_str("Spot"),
+            MarketType::Perp => f.write_str("Perp"),
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -72,6 +83,13 @@ pub struct TickerUpdate {
     pub timestamp: u64,
 }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Hash)]
+pub enum OrderBookState {
+    Open,
+    PostOnly,
+    Closed,
+}
+
 /// A market is where two assets are exchanged. Most notably, in a `BTC/USDC` pair
 /// `BTC` is the base and `USDC` is the quote.
 #[derive(Debug, Serialize, Deserialize)]
@@ -87,6 +105,8 @@ pub struct Market {
     pub market_type: MarketType,
     /// See [`MarketFilters`].
     pub filters: MarketFilters,
+    /// State of the order book
+    pub order_book_state: OrderBookState,
 }
 
 impl Market {

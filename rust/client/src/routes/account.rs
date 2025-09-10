@@ -1,7 +1,8 @@
 use crate::error::Result;
 use crate::BpxClient;
-use bpx_api_types::account::{
-    AccountMaxBorrow, AccountMaxWithdrawal, AccountSettings, ConvertDustPayload, UpdateAccountPayload,
+use bpx_api_types::{
+    account::{AccountMaxBorrow, AccountMaxWithdrawal, AccountSettings, ConvertDustPayload, UpdateAccountPayload},
+    history::ConvertDustHistory,
 };
 
 #[doc(hidden)]
@@ -12,6 +13,8 @@ pub const API_ACCOUNT_MAX_BORROW: &str = "/api/v1/account/limits/borrow";
 pub const API_ACCOUNT_MAX_WITHDRAWAL: &str = "/api/v1/account/limits/withdrawal";
 #[doc(hidden)]
 pub const API_ACCOUNT_CONVERT_DUST: &str = "/api/v1/account/convertDust";
+#[doc(hidden)]
+pub const API_ACCOUNT_CONVERT_DUST_HISTORY: &str = "/wapi/v1/history/dust";
 
 impl BpxClient {
     /// Fetches the account's settings.
@@ -62,5 +65,11 @@ impl BpxClient {
         self.post(url, payload).await?;
 
         Ok(())
+    }
+
+    pub async fn get_convert_dust_history(&self) -> Result<Vec<ConvertDustHistory>> {
+        let url = format!("{}{}", self.base_url, API_ACCOUNT_CONVERT_DUST_HISTORY);
+        let res = self.get(url).await?;
+        res.json().await.map_err(Into::into)
     }
 }
